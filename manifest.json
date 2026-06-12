@@ -1,0 +1,40 @@
+{
+  "name": "Harry's Oven — Wood-Fired Pizza",
+  "short_name": "Harry's Oven",
+  "description": "Lahore's favourite wood-fired pizza. Order on WhatsApp, browse our menu, find locations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF5EC",
+  "theme_color": "#E8462A",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["food", "restaurant"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Order on WhatsApp",
+      "url": "/?action=order",
+      "description": "Place an order via WhatsApp"
+    },
+    {
+      "name": "View Menu",
+      "url": "/#menu",
+      "description": "Browse our full menu"
+    }
+  ]
+}

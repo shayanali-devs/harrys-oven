@@ -516,35 +516,6 @@ textarea{resize:vertical;min-height:60px}
   margin-left:auto;flex-shrink:0;
 }
 
-/* ── LOCATIONS ADMIN ────────────────────────────────────── */
-.locations-admin-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-  gap:var(--sp-5);
-}
-.loc-admin-card{
-  background:var(--clr-surface);
-  border:2.5px solid var(--clr-border);
-  border-radius:var(--r-card);
-  padding:var(--sp-5);
-  box-shadow:var(--shadow-sm);
-}
-.loc-admin-card h3{
-  font-family:var(--ff-display);
-  font-size:1.1rem;font-weight:700;
-  margin-bottom:var(--sp-3);
-}
-.loc-admin-field{
-  display:flex;flex-direction:column;gap:var(--sp-1);
-  margin-bottom:var(--sp-3);
-}
-.loc-admin-field label{
-  font-size:0.72rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.5px;
-  color:var(--clr-text-light);
-}
-.loc-admin-actions{display:flex;gap:var(--sp-2);margin-top:var(--sp-4)}
-
 /* ── SETTINGS ───────────────────────────────────────────── */
 .settings-grid{
   display:grid;
@@ -744,9 +715,8 @@ textarea{resize:vertical;min-height:60px}
   /* Stats: 2 columns on tablet */
   .stats-grid{grid-template-columns:repeat(2,1fr);min-width:0}
 
-  /* Settings & locations: single column */
+  /* Settings: single column */
   .settings-grid{grid-template-columns:1fr}
-  .locations-admin-grid{grid-template-columns:1fr}
 
   /* Menu tabs: horizontal scroll */
   .menu-admin-tabs{
@@ -794,9 +764,6 @@ textarea{resize:vertical;min-height:60px}
   /* Form rows stack */
   .form-row{flex-direction:column}
   .form-row .form-group{min-width:0}
-
-  /* Loc admin cards full width */
-  .locations-admin-grid{grid-template-columns:1fr}
 
   /* Settings cards */
   .settings-grid{grid-template-columns:1fr}

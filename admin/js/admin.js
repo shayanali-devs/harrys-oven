@@ -27,7 +27,6 @@
       canViewDashboard: true,
       canManageMenu: true,      // add/edit/delete
       canManageReviews: true,   // add/edit/delete
-      canManageLocations: true,
       canViewSettings: true,    // Firebase, deploy, API keys
       canDeleteItems: true,
       canChangeSettings: true,
@@ -39,7 +38,6 @@
       canViewDashboard: true,
       canManageMenu: true,      // add/edit
       canManageReviews: true,   // add/edit
-      canManageLocations: true,
       canViewSettings: false,   // No access to Firebase/API keys
       canDeleteItems: false,    // Can't permanently delete
       canChangeSettings: false,
@@ -51,7 +49,6 @@
       canViewDashboard: true,
       canManageMenu: true,      // can only toggle sold out / edit price
       canManageReviews: false,  // can't touch reviews
-      canManageLocations: false,
       canViewSettings: false,
       canDeleteItems: false,
       canChangeSettings: false,
@@ -251,7 +248,6 @@
       let show = true;
       if (view === 'settings' && !perms.canViewSettings) show = false;
       if (view === 'reviews' && !perms.canManageReviews) show = false;
-      if (view === 'locations' && !perms.canManageLocations) show = false;
       btn.style.display = show ? '' : 'none';
     });
 
@@ -336,11 +332,6 @@
       showToast('Access denied — Reviews management requires Manager role', 'error');
       return;
     }
-    if (viewName === 'locations' && !hasPermission('canManageLocations')) {
-      showToast('Access denied — Locations require Manager role', 'error');
-      return;
-    }
-
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -421,11 +412,6 @@
         <div class="stat-card-icon">⭐</div>
         <div class="stat-card-num">${reviewsData.length}</div>
         <div class="stat-card-label">Reviews</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">📍</div>
-        <div class="stat-card-num">2</div>
-        <div class="stat-card-label">Locations</div>
       </div>
     `;
 

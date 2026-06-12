@@ -475,4 +475,84 @@
     if (menuGrid) gridObserver.observe(menuGrid, { childList: true });
   });
 
+  // ── SERVICE WORKER REGISTRATION ──────────────────────────
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => {
+          console.log('SW registered:', reg.scope);
+
+          // Check for updates
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'activated') {
+                // New content available — could show a toast
+                console.log('New content available; please refresh.');
+              }
+            });
+          });
+        })
+        .catch(err => console.log('SW registration failed:', err));
+    });
+  }
+
+  // ── PWA INSTALL PROMPT ───────────────────────────────────
+  let deferredPrompt;
+  let installBanner;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallBanner();
+  });
+
+  function showInstallBanner() {
+    if (installBanner) return;
+
+    installBanner = document.createElement('div');
+    installBanner.id = 'pwa-install-banner';
+    installBanner.innerHTML = `
+      <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:900;
+        background:#fff;border:2.5px solid #1E1208;border-radius:20px;padding:16px 20px;
+        box-shadow:6px 8px 0px rgba(30,18,8,0.20);max-width:340px;width:calc(100% - 40px);
+        display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;">
+        <div style="font-size:2rem;flex-shrink:0">🍕</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:0.9rem;color:#1E1208">Install Harry's Oven</div>
+          <div style="font-size:0.78rem;color:#8A6040">Add to home screen for quick access</div>
+        </div>
+        <button id="pwa-install-btn" style="background:#E8462A;color:#fff;border:2px solid #1E1208;
+          border-radius:9999px;padding:8px 16px;font-weight:700;font-size:0.82rem;cursor:pointer;
+          white-space:nowrap;box-shadow:2px 2px 0px rgba(30,18,8,0.10);">Install</button>
+        <button id="pwa-dismiss-btn" style="background:none;border:none;font-size:1.2rem;
+          cursor:pointer;color:#8A6040;padding:4px;">✕</button>
+      </div>
+    `;
+    document.body.appendChild(installBanner);
+
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('Install outcome:', outcome);
+      deferredPrompt = null;
+      dismissInstallBanner();
+    });
+
+    document.getElementById('pwa-dismiss-btn').addEventListener('click', dismissInstallBanner);
+  }
+
+  function dismissInstallBanner() {
+    if (installBanner) {
+      installBanner.remove();
+      installBanner = null;
+    }
+  }
+
+  window.addEventListener('appinstalled', () => {
+    console.log('PWA installed successfully');
+    dismissInstallBanner();
+  });
+
 })();
