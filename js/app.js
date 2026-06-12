@@ -416,7 +416,7 @@
     });
   }
 
-  // ── LOADING OVERLAY (Feature 3: Stylish Loader) ────────
+  // ── LOADING OVERLAY (Feature 3: Cinematic Loader) ──────
   function initLoader() {
     const loader = document.getElementById('loader');
     const loaderText = loader ? loader.querySelector('.loader-text') : null;
@@ -424,20 +424,25 @@
 
     const letters = loaderText ? loaderText.querySelectorAll('.loader-letter') : [];
     const totalLetters = letters.length;
-    // Each letter animates in 400ms with 60ms stagger between each
-    const lettersDoneTime = totalLetters * 60 + 400; // ~1120ms for 12 letters
-    // Then pulse for 500ms, then fade for 500ms
-    // Total ~2100ms
+    // Letter stagger: 70ms each, 600ms duration → last letter finishes at ~1440ms
+    const lettersDoneTime = totalLetters * 70 + 600;
+    // Then breathe/pulse for 700ms
+    // Then tagline appears at 1600ms (via CSS)
+    // Total show: ~2400ms, then fade out
 
-    // After all letters are done animating, add pulse
+    // After all letters are done + glow builds, add breathe pulse
     setTimeout(() => {
       if (loaderText) loaderText.classList.add('letters-done');
     }, lettersDoneTime);
 
-    // After pulse, fade out
+    // After breathe + tagline, fade out the whole loader
     setTimeout(() => {
       loader.classList.add('loaded');
-    }, lettersDoneTime + 500);
+      // Remove loader from DOM after transition
+      setTimeout(() => {
+        loader.remove();
+      }, 900);
+    }, lettersDoneTime + 700 + 600);
   }
 
   // ── DYNAMIC COPYRIGHT YEAR ──────────────────────────────
@@ -606,21 +611,146 @@
     setTimeout(() => toast.classList.remove('show'), 3000);
   }
 
-  // ── CINEMATIC SCROLL REVEAL (Feature 2) ──────────────────
+  // ── CINEMATIC SCROLL REVEAL (Feature 2 — 3D Parallax) ─────
   function initCinemaReveal() {
     const scenes = document.querySelectorAll('.cinema-scene[data-reveal]');
     if (!scenes.length) return;
 
-    const observer = new IntersectionObserver((entries) => {
+    // Reveal observer — triggers the .revealed class
+    const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
+          revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-    scenes.forEach(scene => observer.observe(scene));
+    scenes.forEach(scene => revealObserver.observe(scene));
+
+    // Scroll-driven parallax on revealed images
+    const parallaxObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const wrap = entry.target;
+        if (entry.isIntersecting && wrap.closest('.cinema-scene.revealed')) {
+          wrap.classList.add('parallax-active');
+        } else {
+          wrap.classList.remove('parallax-active');
+        }
+      });
+    }, { threshold: 0, rootMargin: '-10% 0px -10% 0px' });
+
+    scenes.forEach(scene => {
+      const imgWrap = scene.querySelector('.cinema-image-wrap');
+      if (imgWrap) parallaxObserver.observe(imgWrap);
+    });
+
+    // Parallax scroll handler — moves image slightly as user scrolls
+    let ticking = false;
+    function updateParallax() {
+      const activeWraps = document.querySelectorAll('.cinema-image-wrap.parallax-active');
+      activeWraps.forEach(wrap => {
+        const rect = wrap.getBoundingClientRect();
+        const viewCenter = window.innerHeight / 2;
+        const elementCenter = rect.top + rect.height / 2;
+        const offset = (elementCenter - viewCenter) / viewCenter; // -1 to 1
+        const img = wrap.querySelector('img');
+        if (img) {
+          // Subtle vertical parallax shift + tiny 3D tilt based on scroll position
+          const translateY = offset * -15;
+          const rotateX = offset * -3;
+          img.style.transform = `scale(1) translateY(${translateY}px) rotateX(${rotateX}deg)`;
+        }
+      });
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // ── Floating ember particles ──
+    initEmbers();
+  }
+
+  // ── EMBER PARTICLES (Feature 2 — atmospheric detail) ──────
+  function initEmbers() {
+    const storySection = document.querySelector('.story-section');
+    if (!storySection) return;
+
+    // Don't run on low-end devices
+    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return;
+    // Check reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let emberTimer = null;
+
+    function spawnEmber() {
+      const ember = document.createElement('div');
+      ember.className = 'ember';
+      ember.style.position = 'absolute';
+
+      // Random position within the story section
+      const sectionRect = storySection.getBoundingClientRect();
+      ember.style.left = (Math.random() * 80 + 10) + '%';
+      ember.style.top = (Math.random() * 60 + 30) + '%';
+
+      storySection.appendChild(ember);
+
+      // Trigger animation
+      requestAnimationFrame(() => {
+        ember.classList.add('active');
+      });
+
+      // Remove after animation
+      setTimeout(() => {
+        ember.remove();
+      }, 3200);
+    }
+
+    // Only spawn embers when section is visible
+    const emberObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!emberTimer) {
+            spawnEmber(); // Spawn one immediately
+            emberTimer = setInterval(spawnEmber, 1800);
+          }
+        } else {
+          if (emberTimer) {
+            clearInterval(emberTimer);
+            emberTimer = null;
+          }
+        }
+      });
+    }, { threshold: 0.05 });
+
+    emberObserver.observe(storySection);
+  }
+
+  // ── 3D TILT ON HOVER (Cinema images) ──────────────────────
+  function initCinemaTilt() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return; // Only on desktop
+
+    const wraps = document.querySelectorAll('.cinema-image-wrap');
+    wraps.forEach(wrap => {
+      wrap.addEventListener('mousemove', (e) => {
+        const rect = wrap.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        wrap.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 6}deg) scale(1.02)`;
+        wrap.style.transition = 'transform 0.1s ease-out';
+      });
+
+      wrap.addEventListener('mouseleave', () => {
+        wrap.style.transform = '';
+        wrap.style.transition = '';
+      });
+    });
   }
 
   // ── SECTION DIVIDER REVEAL (Feature 6.5) ─────────────────
@@ -722,8 +852,11 @@
     // Feature 1: Review modal
     initReviewModal();
 
-    // Feature 2: Cinematic scroll reveal
+    // Feature 2: Cinematic scroll reveal + 3D parallax
     initCinemaReveal();
+
+    // Feature 2 extra: 3D tilt on cinema images
+    setTimeout(initCinemaTilt, 1200);
 
     // Feature 6: Wow factor
     initCursorGlow();
