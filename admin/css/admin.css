@@ -294,6 +294,8 @@ textarea{resize:vertical;min-height:60px}
   margin-left:var(--sidebar-w);
   padding:var(--sp-8);
   min-height:100vh;
+  overflow-x:hidden;
+  width:calc(100% - var(--sidebar-w));
 }
 
 /* ── VIEWS ──────────────────────────────────────────────── */
@@ -324,6 +326,8 @@ textarea{resize:vertical;min-height:60px}
   padding:var(--sp-5);
   box-shadow:var(--shadow-sm);
   text-align:center;
+  overflow:hidden;
+  min-width:0;
 }
 .stat-card-icon{font-size:1.5rem;margin-bottom:var(--sp-2)}
 .stat-card-num{
@@ -354,6 +358,9 @@ textarea{resize:vertical;min-height:60px}
   font-size:0.85rem;font-weight:600;
   box-shadow:var(--shadow-xs);
   transition:transform var(--t-fast),box-shadow var(--t-fast),background var(--t-fast);
+  overflow:hidden;
+  min-width:0;
+  word-break:break-word;
 }
 .action-card:hover{
   transform:translate(-2px,-3px);
@@ -375,8 +382,10 @@ textarea{resize:vertical;min-height:60px}
   padding:var(--sp-3) var(--sp-4);
   display:flex;align-items:center;justify-content:space-between;
   box-shadow:var(--shadow-xs);
+  overflow:hidden;
+  min-width:0;
 }
-.cat-chip-name{font-weight:700;font-size:0.85rem}
+.cat-chip-name{font-weight:700;font-size:0.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .cat-chip-count{
   background:var(--clr-yellow);
   border:1.5px solid var(--clr-border);
@@ -730,10 +739,10 @@ textarea{resize:vertical;min-height:60px}
   .sidebar-backdrop{display:block}
   .sidebar-close{display:block}
   .mobile-header{display:flex}
-  .main-content{margin-left:0;padding:var(--sp-4)}
+  .main-content{margin-left:0;padding:var(--sp-4);width:100%}
 
   /* Stats: 2 columns on tablet */
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:repeat(2,1fr);min-width:0}
 
   /* Settings & locations: single column */
   .settings-grid{grid-template-columns:1fr}
@@ -820,21 +829,23 @@ textarea{resize:vertical;min-height:60px}
   .view-sub{font-size:0.82rem}
 
   /* Stats grid: 2 columns */
-  .stats-grid{grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:var(--sp-3);min-width:0}
+  .stat-card-num{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .stat-card{padding:var(--sp-3)}
   .stat-card-num{font-size:1.3rem}
   .stat-card-label{font-size:0.72rem}
   .stat-card-icon{font-size:1.2rem}
 
   /* Quick actions: 2x2 */
-  .quick-actions{grid-template-columns:1fr 1fr;gap:var(--sp-2)}
-  .action-card{padding:var(--sp-3) var(--sp-2);font-size:0.8rem}
+  .quick-actions{grid-template-columns:1fr 1fr;gap:var(--sp-2);min-width:0}
+  .action-card{padding:var(--sp-3) var(--sp-2);font-size:0.78rem;min-width:0;overflow:hidden}
   .action-icon{font-size:1.3rem}
+  .action-card span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 
   /* Category breakdown: 2 cols */
-  .category-breakdown{grid-template-columns:1fr 1fr;gap:var(--sp-2)}
-  .cat-chip{padding:var(--sp-2) var(--sp-3)}
-  .cat-chip-name{font-size:0.8rem}
+  .category-breakdown{grid-template-columns:1fr 1fr;gap:var(--sp-2);min-width:0}
+  .cat-chip{padding:var(--sp-2) var(--sp-3);overflow:hidden;min-width:0}
+  .cat-chip-name{font-size:0.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   /* ── TABLE → CARD LAYOUT ────────────────────────────── */
   .items-table-wrap{
@@ -1011,9 +1022,10 @@ textarea{resize:vertical;min-height:60px}
 
   .main-content{padding:var(--sp-2)}
 
-  .stats-grid{gap:var(--sp-2)}
-  .stat-card{padding:var(--sp-2) var(--sp-3)}
-  .stat-card-num{font-size:1.15rem}
+  .stats-grid{gap:var(--sp-2);min-width:0}
+  .stat-card{padding:var(--sp-2) var(--sp-3);overflow:hidden;min-width:0}
+  .stat-card-num{font-size:1.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .stat-card-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   .quick-actions{gap:var(--sp-2)}
   .action-card{padding:var(--sp-3) var(--sp-2);font-size:0.78rem}
