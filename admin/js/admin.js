@@ -18,10 +18,57 @@
     deals:      { label: '🔥 Deals',      emoji: '🔥' }
   };
 
-  // ── DEV MODE ────────────────────────────────────────────
-  // If Firebase Auth isn't enabled yet, use dev mode with a simple password
-  const DEV_PASSWORD = 'harrys2025';
+  // ── ROLES & PERMISSIONS ─────────────────────────────────
+  const ROLES = {
+    owner: {
+      label: 'Owner',
+      color: '#E8462A',
+      // Can do everything
+      canViewDashboard: true,
+      canManageMenu: true,      // add/edit/delete
+      canManageReviews: true,   // add/edit/delete
+      canManageLocations: true,
+      canViewSettings: true,    // Firebase, deploy, API keys
+      canDeleteItems: true,
+      canChangeSettings: true,
+    },
+    manager: {
+      label: 'Manager',
+      color: '#F57C2B',
+      // Day-to-day operations, no tech settings
+      canViewDashboard: true,
+      canManageMenu: true,      // add/edit
+      canManageReviews: true,   // add/edit
+      canManageLocations: true,
+      canViewSettings: false,   // No access to Firebase/API keys
+      canDeleteItems: false,    // Can't permanently delete
+      canChangeSettings: false,
+    },
+    staff: {
+      label: 'Staff',
+      color: '#4CAF7D',
+      // Read-only + mark items as sold out
+      canViewDashboard: true,
+      canManageMenu: true,      // can only toggle sold out / edit price
+      canManageReviews: false,  // can't touch reviews
+      canManageLocations: false,
+      canViewSettings: false,
+      canDeleteItems: false,
+      canChangeSettings: false,
+    }
+  };
+
+  // ── DEV ACCOUNTS (password-based login) ──────────────────
+  const DEV_ACCOUNTS = [
+    { email: 'owner',   password: 'harrys2025', role: 'owner',   name: 'Shayan Ali' },
+    { email: 'manager', password: 'manager2025', role: 'manager', name: 'Manager' },
+    { email: 'staff',   password: 'staff2025',   role: 'staff',   name: 'Staff' },
+    // Also accept any email with the owner password for convenience
+    { email: '*',       password: 'harrys2025',  role: 'owner',   name: 'Admin' },
+  ];
+
   let isDevMode = false;
+  let currentRole = null; // 'owner' | 'manager' | 'staff'
 
   // ── STATE ────────────────────────────────────────────────
   let menuData = {};
@@ -93,14 +140,26 @@
     btn.querySelector('.btn-text').style.display = 'none';
     btn.querySelector('.btn-spinner').style.display = 'inline';
 
-    // Dev mode: simple password check
-    if (password === DEV_PASSWORD) {
+    // Dev mode: check against role-based accounts
+    const devAccount = DEV_ACCOUNTS.find(a =>
+      (a.email === '*' || a.email === email) && a.password === password
+    );
+    // Prefer exact match over wildcard
+    const exactAccount = DEV_ACCOUNTS.find(a => a.email === email && a.password === password);
+    const matchedAccount = exactAccount || devAccount;
+
+    if (matchedAccount) {
       isDevMode = true;
-      currentUser = { email: email || 'admin@harrysoven.com', displayName: 'Admin' };
+      currentRole = matchedAccount.role;
+      currentUser = {
+        email: matchedAccount.email === '*' ? (email || 'admin@harrysoven.com') : matchedAccount.email + '@harrysoven.com',
+        displayName: matchedAccount.name
+      };
       showAdmin();
       updateUserUI(currentUser);
+      applyRolePermissions();
       loadAllData();
-      showToast('Welcome! (Dev Mode)', 'success');
+      showToast(`Welcome, ${ROLES[currentRole].label}!`, 'success');
       btn.querySelector('.btn-text').style.display = 'inline';
       btn.querySelector('.btn-spinner').style.display = 'none';
       return;
@@ -113,9 +172,9 @@
         showToast('Welcome back!', 'success');
       })
       .catch(err => {
-        // If auth error, suggest dev mode password
+        // If auth error, suggest dev mode
         const msg = err.code === 'auth/operation-not-allowed'
-          ? 'Firebase Auth not enabled. Use dev password: ' + DEV_PASSWORD
+          ? 'Firebase Auth not enabled. Use role-based login: owner/manager/staff'
           : getAuthError(err.code);
         errorEl.textContent = msg;
         errorEl.style.display = 'block';
@@ -161,11 +220,51 @@
 
   function updateUserUI(user) {
     const initial = (user.displayName || user.email).charAt(0).toUpperCase();
-    document.getElementById('user-avatar').textContent = initial;
-    document.getElementById('user-name').textContent = user.displayName || 'Admin';
+    const avatarEl = document.getElementById('user-avatar');
+    avatarEl.textContent = initial;
+    // Color avatar by role
+    if (currentRole && ROLES[currentRole]) {
+      avatarEl.style.background = ROLES[currentRole].color;
+    }
+    document.getElementById('user-name').textContent = (user.displayName || 'Admin') + (currentRole ? ` (${ROLES[currentRole].label})` : '');
     document.getElementById('user-email').textContent = user.email;
     const settingsEmail = document.getElementById('settings-user-email');
     if (settingsEmail) settingsEmail.textContent = user.email;
+  }
+
+  // ── ROLE PERMISSIONS ─────────────────────────────────────
+  function applyRolePermissions() {
+    if (!currentRole || !ROLES[currentRole]) return;
+    const perms = ROLES[currentRole];
+
+    // Sidebar nav visibility
+    document.querySelectorAll('.nav-item[data-view]').forEach(btn => {
+      const view = btn.dataset.view;
+      let show = true;
+      if (view === 'settings' && !perms.canViewSettings) show = false;
+      if (view === 'reviews' && !perms.canManageReviews) show = false;
+      if (view === 'locations' && !perms.canManageLocations) show = false;
+      btn.style.display = show ? '' : 'none';
+    });
+
+    // Quick actions on dashboard
+    const addMenuBtn = document.querySelector('[onclick*="showAddItemModal"]');
+    const addReviewBtn = document.querySelector('[onclick*="showAddReviewModal"]');
+    const settingsBtn = document.querySelector('[onclick*="switchView(\'settings\')"]');
+    if (addMenuBtn && !perms.canManageMenu) addMenuBtn.style.display = 'none';
+    if (addReviewBtn && !perms.canManageReviews) addReviewBtn.style.display = 'none';
+    if (settingsBtn && !perms.canViewSettings) settingsBtn.style.display = 'none';
+
+    // Store permissions globally for other functions to check
+    window._adminPerms = perms;
+    window._adminRole = currentRole;
+  }
+
+  function hasPermission(perm) {
+    if (window._adminPerms && perm in window._adminPerms) {
+      return window._adminPerms[perm];
+    }
+    return true; // default allow for owner/Firebase auth users
   }
 
   // ── SIDEBAR ──────────────────────────────────────────────
@@ -196,6 +295,20 @@
   }
 
   function switchView(viewName) {
+    // Check permissions before switching
+    if (viewName === 'settings' && !hasPermission('canViewSettings')) {
+      showToast('Access denied — Settings is for owners only', 'error');
+      return;
+    }
+    if (viewName === 'reviews' && !hasPermission('canManageReviews')) {
+      showToast('Access denied — Reviews management requires Manager role', 'error');
+      return;
+    }
+    if (viewName === 'locations' && !hasPermission('canManageLocations')) {
+      showToast('Access denied — Locations require Manager role', 'error');
+      return;
+    }
+
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -354,7 +467,7 @@
         <td>
           <div class="item-actions">
             <button class="btn-icon" title="Edit" onclick="adminApp.editItem('${item.id}')">✏️</button>
-            <button class="btn-icon" title="Delete" onclick="adminApp.deleteItem('${item.id}')">🗑️</button>
+            ${hasPermission('canDeleteItems') ? `<button class="btn-icon" title="Delete" onclick="adminApp.deleteItem('${item.id}')">🗑️</button>` : ''}
           </div>
         </td>
       </tr>`;
@@ -488,6 +601,10 @@
   }
 
   function deleteItem(itemId) {
+    if (!hasPermission('canDeleteItems')) {
+      showToast('Access denied — Only owners can delete items', 'error');
+      return;
+    }
     showConfirm('Delete Item', 'Are you sure you want to delete this item? This cannot be undone.', () => {
       const cat = findItemCategory(itemId);
       if (!cat) return;
