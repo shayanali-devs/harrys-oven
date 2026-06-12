@@ -79,8 +79,13 @@
 
   <!-- ═══ LOADER ═══ -->
   <div id="loader">
-    <span>🍕</span>
+    <div class="loader-text" aria-label="Harry's Oven">
+      <span class="loader-letter" style="--letter-index:0">H</span><span class="loader-letter" style="--letter-index:1">a</span><span class="loader-letter" style="--letter-index:2">r</span><span class="loader-letter" style="--letter-index:3">r</span><span class="loader-letter" style="--letter-index:4">y</span><span class="loader-letter" style="--letter-index:5">'</span><span class="loader-letter" style="--letter-index:6">s</span><span class="loader-letter" style="--letter-index:7"> </span><span class="loader-letter" style="--letter-index:8">O</span><span class="loader-letter" style="--letter-index:9">v</span><span class="loader-letter" style="--letter-index:10">e</span><span class="loader-letter" style="--letter-index:11">n</span>
+    </div>
   </div>
+
+  <!-- ═══ CURSOR GLOW ═══ -->
+  <div id="cursor-glow"></div>
 
   <!-- ═══ BACK TO TOP ═══ -->
   <button id="back-to-top" aria-label="Back to top">
@@ -128,9 +133,11 @@
         <h1>Where Every Pizza <em>Tells a Story</em></h1>
         <p class="hero-sub">Lahore's home of handcrafted wood-fired flavours. Two locations, one passion — fired by wood, made with love.</p>
         <div class="hero-btns">
-          <a href="https://wa.me/923044444292?text=Hi%20Harry's%20Oven!%20I'd%20like%20to%20place%20an%20order." class="btn btn-primary" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.768-6.39-2.068l-.446-.34-3.328 1.116 1.116-3.328-.34-.446A9.935 9.935 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
-            Order on WhatsApp
+          <a href="https://wa.me/923044444292?text=Hi%20Harry's%20Oven!%20I'd%20like%20to%20place%20an%20order." class="neu-btn" target="_blank" rel="noopener">
+            <div class="neu-btn-outer"><div class="neu-btn-inner"><span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.768-6.39-2.068l-.446-.34-3.328 1.116 1.116-3.328-.34-.446A9.935 9.935 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+              Order on WhatsApp
+            </span></div></div>
           </a>
           <a href="#locations" class="btn btn-secondary">Find Us</a>
         </div>
@@ -177,6 +184,9 @@
     </div>
   </div>
 
+  <!-- ═══ SECTION DIVIDER ═══ -->
+  <div class="section-divider" aria-hidden="true"><span class="divider-line"></span><span class="divider-icon">🔥</span><span class="divider-line"></span></div>
+
   <!-- ═══ SIGNATURE DISHES ═══ -->
   <section class="signature-section" id="signature">
     <div class="container">
@@ -206,22 +216,53 @@
     </div>
   </section>
 
-  <!-- ═══ OUR STORY ═══ -->
+  <!-- ═══ SECTION DIVIDER ═══ -->
+  <div class="section-divider" aria-hidden="true"><span class="divider-line"></span><span class="divider-icon">🔥</span><span class="divider-line"></span></div>
+
+  <!-- ═══ OUR STORY (Cinematic) ═══ -->
   <section class="story-section" id="story">
-    <div class="container">
-      <div class="story-visual">
-        <div class="float-chip chip-1">🔥 100% Wood Fired</div>
-        <div class="float-chip chip-2">🌿 Fresh Daily</div>
-        <div class="oven-card">
-          <img class="oven-card-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=400&fit=crop" alt="Harry's Oven interior">
-          <p>"Nothing brings people together like good food."</p>
-        </div>
+    <!-- Scene 1: Storefront -->
+    <div class="cinema-scene cinema-scene--storefront" data-reveal>
+      <div class="cinema-image-wrap cinema-slide-left">
+        <img src="/images/about-storefront.jpg" alt="Harry's Oven storefront at night, warm lights glowing" loading="lazy">
       </div>
-      <div class="story-text">
+      <div class="cinema-text-wrap cinema-slide-up">
         <div class="section-eyebrow">🧡 Our Story</div>
-        <h2>Fired by Wood, Made with Love</h2>
-        <p>Harry's Oven was born from a simple belief: that the best food comes from the most honest methods. Our wood-fired oven isn't just equipment — it's the heart of our kitchen.</p>
-        <p>Every pizza is handcrafted with fresh ingredients, every crust is fired to perfection, and every meal is meant to bring people together. That's the Harry's Oven way.</p>
+        <h2>Fired by Wood,<br>Made with Love</h2>
+        <p>It starts with a glow. A warm storefront on a cool Lahore evening, the scent of woodsmoke threading through the streets like a promise. That's Harry's Oven — a place that was never meant to be just another restaurant.</p>
+      </div>
+    </div>
+
+    <!-- Scene 2: Sauce -->
+    <div class="cinema-scene cinema-scene--sauce cinema-scene--reverse" data-reveal>
+      <div class="cinema-image-wrap cinema-slide-right">
+        <img src="/images/about-sauce.jpg" alt="Hands spreading fresh tomato sauce on pizza dough" loading="lazy">
+      </div>
+      <div class="cinema-text-wrap cinema-slide-up">
+        <h2>Every Spread<br>Tells a Story</h2>
+        <p>Before the oven, there are hands. Hands that knead, spread, and season with the kind of care that can't be taught. Our sauce isn't just a recipe — it's a ritual passed down, a slow simmer of San Marzano tomatoes and conviction.</p>
+      </div>
+    </div>
+
+    <!-- Scene 3: Chef -->
+    <div class="cinema-scene cinema-scene--chef" data-reveal>
+      <div class="cinema-image-wrap cinema-slide-bottom cinema-image-portrait">
+        <img src="/images/about-chef.jpg" alt="Chef in the kitchen crafting a wood-fired masterpiece" loading="lazy">
+      </div>
+      <div class="cinema-text-wrap cinema-slide-up">
+        <h2>The Fire<br>Behind the Flame</h2>
+        <p>Behind every great meal is someone who refuses to cut corners. Our chefs don't just cook — they craft. Each one trained in the art of wood-fired cooking, understanding that timing is everything and that patience is the secret ingredient no menu can list.</p>
+      </div>
+    </div>
+
+    <!-- Scene 4: Oven -->
+    <div class="cinema-scene cinema-scene--oven cinema-scene--reverse" data-reveal>
+      <div class="cinema-image-wrap cinema-slide-left">
+        <img src="/images/about-oven.jpg" alt="Inside the wood-fired oven, flames dancing" loading="lazy">
+      </div>
+      <div class="cinema-text-wrap cinema-slide-up">
+        <h2>Where Magic<br>Meets 900 Degrees</h2>
+        <p>And then — the oven. The heart of it all. 900 degrees of pure, wood-fired intensity that transforms dough into something extraordinary in under 90 seconds. That char? That's not a flaw. That's the signature of something real.</p>
         <div class="story-values">
           <span class="value-chip">🪵 Wood-Fired</span>
           <span class="value-chip">🌿 Fresh Ingredients</span>
@@ -269,24 +310,77 @@
     </div>
   </section>
 
+  <!-- ═══ SECTION DIVIDER ═══ -->
+  <div class="section-divider" aria-hidden="true"><span class="divider-line"></span><span class="divider-icon">🔥</span><span class="divider-line"></span></div>
+
   <!-- ═══ REVIEWS ═══ -->
   <section class="reviews-section" id="reviews">
     <div class="container">
-      <div class="section-eyebrow">💬 Reviews</div>
-      <h2>What Our Customers Say</h2>
-      <p class="section-lead">Don't just take our word for it — hear from the people who keep coming back.</p>
+      <div class="reviews-header">
+        <div>
+          <div class="section-eyebrow">💬 Reviews</div>
+          <h2>What Our Customers Say</h2>
+          <p class="section-lead">Don't just take our word for it — hear from the people who keep coming back.</p>
+        </div>
+        <button class="btn btn-primary" id="open-review-modal" type="button">Write a Review</button>
+      </div>
       <div class="reviews-grid" id="reviews-grid">
         <!-- Rendered by JS -->
       </div>
     </div>
   </section>
 
+  <!-- ═══ REVIEW MODAL ═══ -->
+  <div class="modal-overlay" id="review-modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="close-review-modal" aria-label="Close">✕</button>
+      <h3 id="modal-title">Write a Review</h3>
+      <form id="review-form" novalidate>
+        <div class="form-group">
+          <label>Your Rating</label>
+          <div class="star-rating" id="star-rating">
+            <span class="star-input" data-value="1">★</span>
+            <span class="star-input" data-value="2">★</span>
+            <span class="star-input" data-value="3">★</span>
+            <span class="star-input" data-value="4">★</span>
+            <span class="star-input" data-value="5">★</span>
+          </div>
+          <input type="hidden" id="review-stars" name="stars" value="0" required>
+        </div>
+        <div class="form-group">
+          <label for="review-name">Your Name</label>
+          <input type="text" id="review-name" name="name" placeholder="e.g. Ahmed K." required minlength="2" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label for="review-text">Your Review</label>
+          <textarea id="review-text" name="text" rows="4" placeholder="Tell us about your experience..." required minlength="10" maxlength="500"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="review-platform">Platform</label>
+          <select id="review-platform" name="platform">
+            <option value="Foodpanda">Foodpanda</option>
+            <option value="Google">Google</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Instagram">Instagram</option>
+            <option value="WhatsApp">WhatsApp</option>
+          </select>
+        </div>
+        <button type="submit" class="neu-btn neu-btn--submit">
+          <div class="neu-btn-outer"><div class="neu-btn-inner"><span>Submit Review</span></div></div>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION DIVIDER ═══ -->
+  <div class="section-divider" aria-hidden="true"><span class="divider-line"></span><span class="divider-icon">🔥</span><span class="divider-line"></span></div>
+
   <!-- ═══ CTA BANNER ═══ -->
   <div class="cta-banner" id="contact">
     <div class="container">
       <h2>Ready to Taste the Difference?</h2>
-      <a href="https://wa.me/923044444292?text=Hi%20Harry's%20Oven!%20I'd%20like%20to%20place%20an%20order." class="btn btn-white" target="_blank" rel="noopener">
-        Order on WhatsApp →
+      <a href="https://wa.me/923044444292?text=Hi%20Harry's%20Oven!%20I'd%20like%20to%20place%20an%20order." class="neu-btn neu-btn--cta" target="_blank" rel="noopener">
+        <div class="neu-btn-outer"><div class="neu-btn-inner"><span>Order on WhatsApp →</span></div></div>
       </a>
     </div>
   </div>

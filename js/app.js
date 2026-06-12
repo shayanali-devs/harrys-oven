@@ -379,6 +379,10 @@
 
         if (progress < 1) {
           requestAnimationFrame(update);
+        } else {
+          // Feature 6.2: Stats counter pulse when done
+          el.classList.add('pulse');
+          setTimeout(() => el.classList.remove('pulse'), 300);
         }
       }
 
@@ -412,13 +416,28 @@
     });
   }
 
-  // ── LOADING OVERLAY ─────────────────────────────────────
+  // ── LOADING OVERLAY (Feature 3: Stylish Loader) ────────
   function initLoader() {
     const loader = document.getElementById('loader');
+    const loaderText = loader ? loader.querySelector('.loader-text') : null;
     if (!loader) return;
+
+    const letters = loaderText ? loaderText.querySelectorAll('.loader-letter') : [];
+    const totalLetters = letters.length;
+    // Each letter animates in 400ms with 60ms stagger between each
+    const lettersDoneTime = totalLetters * 60 + 400; // ~1120ms for 12 letters
+    // Then pulse for 500ms, then fade for 500ms
+    // Total ~2100ms
+
+    // After all letters are done animating, add pulse
+    setTimeout(() => {
+      if (loaderText) loaderText.classList.add('letters-done');
+    }, lettersDoneTime);
+
+    // After pulse, fade out
     setTimeout(() => {
       loader.classList.add('loaded');
-    }, 800);
+    }, lettersDoneTime + 500);
   }
 
   // ── DYNAMIC COPYRIGHT YEAR ──────────────────────────────
@@ -443,6 +462,250 @@
     setTimeout(checkScroll, 500);
   }
 
+  // ── REVIEW MODAL (Feature 1) ────────────────────────────
+  function initReviewModal() {
+    const overlay = document.getElementById('review-modal-overlay');
+    const openBtn = document.getElementById('open-review-modal');
+    const closeBtn = document.getElementById('close-review-modal');
+    const form = document.getElementById('review-form');
+    const starRating = document.getElementById('star-rating');
+    const starsInput = document.getElementById('review-stars');
+    const starInputs = starRating ? starRating.querySelectorAll('.star-input') : [];
+
+    if (!overlay || !openBtn || !closeBtn || !form) return;
+
+    // Open modal
+    openBtn.addEventListener('click', () => {
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Star rating interaction
+    let selectedRating = 0;
+    starInputs.forEach(star => {
+      star.addEventListener('mouseenter', () => {
+        const val = parseInt(star.dataset.value);
+        starInputs.forEach(s => {
+          const sv = parseInt(s.dataset.value);
+          s.classList.toggle('hover-preview', sv <= val && sv > selectedRating);
+        });
+      });
+      star.addEventListener('mouseleave', () => {
+        starInputs.forEach(s => s.classList.remove('hover-preview'));
+      });
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.value);
+        starsInput.value = selectedRating;
+        starInputs.forEach(s => {
+          s.classList.toggle('active', parseInt(s.dataset.value) <= selectedRating);
+          s.classList.remove('hover-preview');
+        });
+      });
+    });
+
+    // Form submit
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('review-name').value.trim();
+      const text = document.getElementById('review-text').value.trim();
+      const platform = document.getElementById('review-platform').value;
+      const stars = parseInt(starsInput.value);
+
+      // Validate
+      let valid = true;
+      if (stars < 1) {
+        valid = false;
+        starInputs.forEach(s => s.classList.add('error'));
+      }
+      if (!name || name.length < 2) {
+        valid = false;
+        document.getElementById('review-name').classList.add('error');
+      }
+      if (!text || text.length < 10) {
+        valid = false;
+        document.getElementById('review-text').classList.add('error');
+      }
+      if (!valid) return;
+
+      // Remove error states
+      document.querySelectorAll('.form-group .error').forEach(el => el.classList.remove('error'));
+
+      // Write to Firebase
+      const reviewData = {
+        name: name,
+        text: text,
+        stars: stars,
+        platform: platform,
+        initial: name.charAt(0).toUpperCase(),
+        timestamp: Date.now()
+      };
+
+      const newRef = db.ref('reviews').push();
+      newRef.set(reviewData)
+        .then(() => {
+          // Add to grid visually
+          const grid = document.getElementById('reviews-grid');
+          if (grid) {
+            const card = document.createElement('div');
+            card.className = 'review-card fade-in visible';
+            card.innerHTML = `
+              <div class="review-stars">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</div>
+              <div class="review-text">"${text}"</div>
+              <div class="review-author">
+                <div class="review-avatar">${name.charAt(0).toUpperCase()}</div>
+                <div>
+                  <div class="review-name">${name}</div>
+                  <div class="review-platform">${platform}</div>
+                </div>
+              </div>
+            `;
+            grid.insertBefore(card, grid.firstChild);
+          }
+
+          // Show success toast
+          showToast('✅ Review submitted successfully!');
+
+          // Reset form & close
+          form.reset();
+          starsInput.value = 0;
+          selectedRating = 0;
+          starInputs.forEach(s => s.classList.remove('active'));
+          closeModal();
+        })
+        .catch(err => {
+          console.error('Error submitting review:', err);
+          showToast('❌ Could not submit review. Please try again.');
+        });
+    });
+  }
+
+  // ── TOAST NOTIFICATION ────────────────────────────────────
+  function showToast(message) {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.remove('show');
+    // Force reflow
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // ── CINEMATIC SCROLL REVEAL (Feature 2) ──────────────────
+  function initCinemaReveal() {
+    const scenes = document.querySelectorAll('.cinema-scene[data-reveal]');
+    if (!scenes.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    scenes.forEach(scene => observer.observe(scene));
+  }
+
+  // ── SECTION DIVIDER REVEAL (Feature 6.5) ─────────────────
+  function initSectionDividers() {
+    const dividers = document.querySelectorAll('.section-divider');
+    if (!dividers.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    dividers.forEach(d => observer.observe(d));
+  }
+
+  // ── CURSOR GLOW (Feature 6.1) ────────────────────────────
+  function initCursorGlow() {
+    const glow = document.getElementById('cursor-glow');
+    if (!glow) return;
+    // Only on desktop (non-touch primary)
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return;
+
+    let active = false;
+    document.addEventListener('mousemove', (e) => {
+      if (!active) {
+        glow.classList.add('active');
+        active = true;
+      }
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseleave', () => {
+      glow.classList.remove('active');
+      active = false;
+    });
+  }
+
+  // ── STATS COUNTER PULSE (Feature 6.2) ────────────────────
+  // Added to existing initStatsCounter
+
+  // ── MENU CARD IMAGE PARALLAX (Feature 6.4) ───────────────
+  function initCardImageParallax() {
+    const cards = document.querySelectorAll('.menu-card, .sig-card');
+    cards.forEach(card => {
+      const img = card.querySelector('.menu-card-img, .sig-card-img');
+      if (!img) return;
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        img.style.transform = `scale(1.08) translate(${x * -4}px, ${y * -4}px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        img.style.transform = '';
+      });
+    });
+  }
+
+  // ── KONAMI CODE EASTER EGG (Feature 6.6) ─────────────────
+  function initKonamiCode() {
+    const konamiSequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      const expected = konamiSequence[konamiIndex].toLowerCase();
+      if (key === expected) {
+        konamiIndex++;
+        if (konamiIndex === konamiSequence.length) {
+          konamiIndex = 0;
+          showToast('\uD83C\uDF55\uD83D\uDD25 Harry\'s Oven Secret Menu! \uD83D\uDD25\uD83C\uDF55');
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
+  }
+
   // ── INIT ──────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     initLoader();
@@ -456,7 +719,21 @@
     initCopyrightYear();
     initMenuTabScroll();
 
+    // Feature 1: Review modal
+    initReviewModal();
+
+    // Feature 2: Cinematic scroll reveal
+    initCinemaReveal();
+
+    // Feature 6: Wow factor
+    initCursorGlow();
+    initSectionDividers();
+    initKonamiCode();
+
     setTimeout(initScrollAnimations, 300);
+
+    // Card image parallax - observe new cards too
+    setTimeout(initCardImageParallax, 500);
 
     const gridObserver = new MutationObserver(() => {
       document.querySelectorAll('.fade-in:not(.visible)').forEach(el => {
@@ -470,6 +747,8 @@
         }, { threshold: 0.08 });
         observer.observe(el);
       });
+      // Re-init parallax for new cards
+      initCardImageParallax();
     });
     const menuGrid = document.getElementById('menu-grid');
     if (menuGrid) gridObserver.observe(menuGrid, { childList: true });
