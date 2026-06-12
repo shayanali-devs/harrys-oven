@@ -358,7 +358,6 @@ h2 {
 .menu-section { }
 .menu-tabs {
   display: flex; gap: var(--sp-2); flex-wrap: wrap;
-  margin-bottom: var(--sp-6);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -686,6 +685,185 @@ footer {
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out); }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+/* ── LOADER OVERLAY ─────────────────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--clr-bg);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.3s ease;
+}
+#loader span {
+  font-size: 3rem;
+  animation: loader-bounce 0.6s ease infinite alternate;
+}
+@keyframes loader-bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-12px); }
+}
+#loader.loaded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── BACK TO TOP BUTTON ─────────────────────────────────── */
+#back-to-top {
+  position: fixed; bottom: 24px; left: 24px; z-index: 900;
+  width: 44px; height: 44px;
+  background: var(--clr-cream);
+  border: 2.5px solid var(--clr-dark);
+  border-radius: var(--r-pill);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--clr-dark);
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow var(--t-fast);
+  pointer-events: none;
+}
+#back-to-top.visible {
+  opacity: 1; transform: translateY(0); pointer-events: all;
+}
+#back-to-top:hover {
+  background: var(--clr-red); color: #fff;
+  transform: translateY(-2px); box-shadow: var(--shadow-md);
+}
+
+/* ── FLOATING STICKER/CHIP ANIMATIONS ───────────────────── */
+@keyframes sticker-float-1 {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50%      { transform: translateY(-6px) rotate(-5deg); }
+}
+@keyframes sticker-float-2 {
+  0%, 100% { transform: translateY(0) rotate(6deg); }
+  50%      { transform: translateY(6px) rotate(9deg); }
+}
+@keyframes chip-float-1 {
+  0%, 100% { transform: translateY(0) rotate(5deg); }
+  50%      { transform: translateY(-6px) rotate(8deg); }
+}
+@keyframes chip-float-2 {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%      { transform: translateY(6px) rotate(-3deg); }
+}
+.sticker-1 { animation: sticker-float-1 3s ease-in-out infinite; }
+.sticker-2 { animation: sticker-float-2 3.5s ease-in-out infinite; }
+.chip-1    { animation: chip-float-1 2.8s ease-in-out infinite; }
+.chip-2    { animation: chip-float-2 3.2s ease-in-out infinite; }
+
+/* ── WHATSAPP FLOAT PULSE ───────────────────────────────── */
+@keyframes wa-pulse {
+  0%   { box-shadow: var(--shadow-md), 0 0 0 0 rgba(37,211,102,0.5); }
+  70%  { box-shadow: var(--shadow-md), 0 0 0 14px rgba(37,211,102,0); }
+  100% { box-shadow: var(--shadow-md), 0 0 0 0 rgba(37,211,102,0); }
+}
+.whatsapp-float {
+  animation: wa-pulse 2s infinite;
+}
+.whatsapp-float:hover {
+  animation: none;
+  transform: translate(-2px,-3px) scale(1.05); box-shadow: var(--shadow-lg);
+}
+
+/* ── ORDER BUTTON ON MENU CARDS ─────────────────────────── */
+.menu-card-order {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #25D366;
+  color: #fff;
+  border: 1.5px solid var(--clr-dark);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  font-size: var(--fs-xs); font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  white-space: nowrap;
+}
+.menu-card-order:hover {
+  transform: translate(-1px,-2px); box-shadow: var(--shadow-sm);
+  background: #1ebe5a;
+}
+.menu-card-order svg { width: 12px; height: 12px; fill: #fff; }
+
+/* ── NO-IMAGE PLACEHOLDER ───────────────────────────────── */
+.menu-card-no-img {
+  width: 100%; aspect-ratio: 16/10;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.4rem;
+  border-bottom: 2.5px solid var(--clr-dark);
+}
+.menu-card-no-img.cat-beverages { background: linear-gradient(135deg, #FFD166, #F57C2B); }
+.menu-card-no-img.cat-deals     { background: linear-gradient(135deg, #FFDDD7, #E8462A); }
+.menu-card-no-img.cat-default    { background: linear-gradient(135deg, var(--clr-cream), #FFD166); }
+
+/* ── HOVER ZOOM ON CARD IMAGES ──────────────────────────── */
+.sig-card { overflow: hidden; }
+.menu-card { overflow: hidden; }
+.sig-card-img, .menu-card-img {
+  transition: transform 0.4s var(--ease-out);
+}
+.sig-card:hover .sig-card-img,
+.menu-card:hover .menu-card-img {
+  transform: scale(1.08);
+}
+
+/* ── MENU TAB SCROLL INDICATOR (mobile) ─────────────────── */
+.menu-tabs-wrap {
+  position: relative;
+  margin-bottom: var(--sp-6);
+}
+.menu-tabs-wrap::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, var(--clr-bg));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.menu-tabs-wrap.scrolling::after {
+  opacity: 1;
+}
+
+/* ── CTA BANNER SUBTLE ANIMATION ────────────────────────── */
+@keyframes cta-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.cta-banner {
+  background: linear-gradient(135deg, var(--clr-red) 0%, #d63a20 30%, var(--clr-red) 60%, #f04a2e 100%);
+  background-size: 300% 300%;
+  animation: cta-shift 8s ease infinite;
+}
+
+/* ── LOCATION DIRECTIONS LINK ───────────────────────────── */
+.loc-directions {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: var(--sp-3);
+  font-size: var(--fs-sm); font-weight: 600;
+  color: var(--clr-yellow);
+  transition: opacity var(--t-fast);
+}
+.loc-directions:hover { opacity: 0.8; }
+.loc-directions svg { flex-shrink: 0; }
+
+/* ── FOOTER SOCIAL SVG ICONS ────────────────────────────── */
+.footer-social a svg {
+  width: 18px; height: 18px;
+  transition: transform var(--t-fast);
+}
+.footer-social a:hover svg {
+  transform: scale(1.15);
+}
+.foodpanda-icon {
+  font-size: 1.1rem;
+}
+.fp-panda {
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE — Mobile First Breakpoints
    ═══════════════════════════════════════════════════════════ */
@@ -850,6 +1028,12 @@ footer {
   .whatsapp-float { width: 48px; height: 48px; bottom: 14px; right: 14px; }
   .whatsapp-float svg { width: 22px; height: 22px; }
   .whatsapp-tooltip { display: none; }
+
+  #back-to-top { width: 38px; height: 38px; bottom: 14px; left: 14px; }
+  .menu-card-order { padding: 3px 8px; font-size: 0.6rem; }
+  .menu-card-order svg { width: 10px; height: 10px; }
+  .menu-card-no-img { font-size: 1.8rem; }
+  .loc-directions { font-size: var(--fs-xs); }
 }
 
 /* ── EXTRA SMALL (≤360px) ───────────────────────────────── */

@@ -6,11 +6,21 @@
   <title>Harry's Oven | Wood-Fired Pizza & Italian Cuisine in Lahore</title>
   <meta name="description" content="Harry's Oven serves Lahore's favourite handcrafted wood-fired pizzas, pastas, and more. Two locations in Gulberg 3 & Cantt. Dine-in, takeaway, delivery & catering available.">
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://harrys-oven.pages.dev">
+
   <!-- Open Graph -->
   <meta property="og:title" content="Harry's Oven — Wood-Fired Pizza Lahore">
   <meta property="og:description" content="Home of Lahore's favourite wood-fired flavours. Handcrafted pizzas, pastas & more. Two locations.">
   <meta property="og:type" content="restaurant">
   <meta property="og:url" content="https://harrys-oven.pages.dev">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1200&h=630&fit=crop">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Harry's Oven — Wood-Fired Pizza Lahore">
+  <meta name="twitter:description" content="Home of Lahore's favourite wood-fired flavours. Handcrafted pizzas, pastas & more. Two locations.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1200&h=630&fit=crop">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,8 +32,48 @@
 
   <!-- Favicon (placeholder — replace with actual logo) -->
   <link rel="icon" type="image/jpeg" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Harry's Oven",
+    "description": "Harry's Oven serves Lahore's favourite handcrafted wood-fired pizzas, pastas, and more. Two locations in Gulberg 3 & Cantt. Dine-in, takeaway, delivery & catering available.",
+    "url": "https://harrys-oven.pages.dev",
+    "telephone": "+923044444292",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "57 C1, Gulberg 3",
+        "addressLocality": "Lahore",
+        "addressCountry": "PK"
+      },
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Ghirja Chowk, Cantt",
+        "addressLocality": "Lahore",
+        "addressCountry": "PK"
+      }
+    ],
+    "servesCuisine": ["Italian", "Pizza", "Wood-Fired"],
+    "priceRange": "₨₨₨",
+    "openingHours": "Mo-Su 13:00-00:00",
+    "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1200&h=630&fit=crop"
+  }
+  </script>
 </head>
 <body>
+
+  <!-- ═══ LOADER ═══ -->
+  <div id="loader">
+    <span>🍕</span>
+  </div>
+
+  <!-- ═══ BACK TO TOP ═══ -->
+  <button id="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
   <!-- ═══ NAVBAR ═══ -->
   <nav class="navbar">
@@ -94,22 +144,22 @@
   <div class="stats-bar">
     <div class="container">
       <div class="stat-item">
-        <span class="stat-num">2</span>
+        <span class="stat-num" data-target="2" data-suffix="">0</span>
         <span class="stat-label">Locations</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num">28K+</span>
+        <span class="stat-num" data-target="28" data-suffix="K+">0</span>
         <span class="stat-label">Instagram Family</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num">4★</span>
+        <span class="stat-num" data-target="4" data-suffix="★">0</span>
         <span class="stat-label">Foodpanda Rating</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num">100+</span>
+        <span class="stat-num" data-target="100" data-suffix="+">0</span>
         <span class="stat-label">Reviews</span>
       </div>
     </div>
@@ -133,8 +183,10 @@
       <div class="section-eyebrow">📋 Menu</div>
       <h2>Our Full Menu</h2>
       <p class="section-lead">From wood-fired pizzas to handcrafted mains — explore everything Harry's Oven has to offer.</p>
-      <div class="menu-tabs" id="menu-tabs">
-        <!-- Rendered by JS -->
+      <div class="menu-tabs-wrap">
+        <div class="menu-tabs" id="menu-tabs">
+          <!-- Rendered by JS -->
+        </div>
       </div>
       <div class="menu-grid" id="menu-grid">
         <!-- Rendered by JS -->
@@ -183,6 +235,10 @@
           <div class="loc-detail"><strong>Hours:</strong> 1:00 PM – Midnight, 7 days</div>
           <div class="loc-detail"><strong>Services:</strong> Dine-in, Takeaway, Outdoor Seating</div>
           <iframe class="loc-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3401.2!2d74.35!3d31.52!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDMxJzEyLjAiTiA3NMKwMjEnMDAuMCJF!5e0!3m2!1sen!2spk!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <a class="loc-directions" href="https://www.google.com/maps/search/Harry's+Oven+Gulberg+3+Lahore" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Get Directions
+          </a>
         </div>
         <div class="loc-card">
           <div class="loc-icon">🏬</div>
@@ -191,7 +247,11 @@
           <div class="loc-detail"><strong>Phone:</strong> 0313-6666402</div>
           <div class="loc-detail"><strong>Hours:</strong> 1:00 PM – Midnight, 7 days</div>
           <div class="loc-detail"><strong>Services:</strong> Dine-in, Takeaway, Delivery</div>
-          <iframe class="loc-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.6!2d74.37!3d31.47!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI4JzEyLjAiTiA3NMKwMjInMTIuMCJF!5e0!3m2!1sen!2spk!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe class="loc-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.6!2d74.37!3d31.47!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI4JzEyLjAiNiA3NMKwMjInMTIuMCJF!5e0!3m2!1sen!2spk!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <a class="loc-directions" href="https://www.google.com/maps/search/Harry's+Oven+Cantt+Lahore" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Get Directions
+          </a>
         </div>
       </div>
     </div>
@@ -227,9 +287,9 @@
           <div class="footer-logo">Harry's Oven 🍕</div>
           <p class="footer-desc">Home of Lahore's favourite wood-fired flavours. Handcrafted pizzas, pastas, and more — fired by wood, made with love.</p>
           <div class="footer-social">
-            <a href="https://www.facebook.com/harrysovencafe" target="_blank" rel="noopener" aria-label="Facebook">📘</a>
-            <a href="https://www.instagram.com/harrysovencafe" target="_blank" rel="noopener" aria-label="Instagram">📸</a>
-            <a href="https://www.foodpanda.pk/restaurant/sw0d/harrys-oven-dha" target="_blank" rel="noopener" aria-label="Foodpanda">🐼</a>
+            <a href="https://www.facebook.com/harrysovencafe" target="_blank" rel="noopener" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a href="https://www.instagram.com/harrysovencafe" target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+            <a href="https://www.foodpanda.pk/restaurant/sw0d/harrys-oven-dha" target="_blank" rel="noopener" aria-label="Foodpanda" class="foodpanda-icon"><span class="fp-panda">🐼</span></a>
           </div>
         </div>
         <div class="footer-col">
@@ -254,7 +314,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2025 Harry's Oven. All rights reserved.</span>
+        <span>© <span id="copyright-year">2025</span> Harry's Oven. All rights reserved.</span>
         <span>Designed & built by <a href="#">Shayan Ali</a></span>
       </div>
     </div>
