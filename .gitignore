@@ -1,0 +1,5 @@
+.env
+.env.local
+cloudflare.env
+credentials-setup.txt
+node_modules
