@@ -676,27 +676,409 @@ textarea{resize:vertical;min-height:60px}
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════ */
+
+/* ── SIDEBAR BACKDROP ───────────────────────────────────── */
+.sidebar-backdrop{
+  display:none;
+  position:fixed;inset:0;z-index:90;
+  background:rgba(30,18,8,0.5);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  opacity:0;
+  transition:opacity var(--t-base);
+  pointer-events:none;
+}
+.sidebar-backdrop.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* ── MOBILE HEADER ACTIONS ──────────────────────────────── */
+.mobile-header-actions{
+  display:flex;align-items:center;gap:var(--sp-2);
+}
+.mobile-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--clr-red);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:0.75rem;color:#fff;
+  border:1.5px solid var(--clr-border);
+}
+.mobile-logout-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;
+  border-radius:var(--r-xs);
+  color:var(--clr-text-light);
+  transition:color var(--t-fast),background var(--t-fast);
+}
+.mobile-logout-btn:hover{
+  color:var(--clr-red);
+  background:var(--clr-red-light);
+}
+
+/* ═══ TABLET: ≤900px ═══════════════════════════════════════ */
 @media(max-width:900px){
   .sidebar{
     transform:translateX(-100%);
+    box-shadow:4px 0 24px rgba(0,0,0,0);
+    transition:transform var(--t-base),box-shadow var(--t-base);
   }
-  .sidebar.open{transform:translateX(0)}
+  .sidebar.open{
+    transform:translateX(0);
+    box-shadow:4px 0 24px rgba(0,0,0,0.25);
+  }
+  .sidebar-backdrop{display:block}
   .sidebar-close{display:block}
   .mobile-header{display:flex}
   .main-content{margin-left:0;padding:var(--sp-4)}
+
+  /* Stats: 2 columns on tablet */
   .stats-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Settings & locations: single column */
   .settings-grid{grid-template-columns:1fr}
   .locations-admin-grid{grid-template-columns:1fr}
+
+  /* Menu tabs: horizontal scroll */
+  .menu-admin-tabs{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:var(--sp-2);
+    margin-left:calc(-1 * var(--sp-4));
+    margin-right:calc(-1 * var(--sp-4));
+    padding-left:var(--sp-4);
+    padding-right:var(--sp-4);
+  }
+  .menu-admin-tabs::-webkit-scrollbar{display:none}
+
+  /* View header tighter */
+  .view-header{margin-bottom:var(--sp-4)}
+  .view-header h1{font-size:1.35rem}
+
+  /* Modal improvements */
+  .modal-overlay{padding:var(--sp-3)}
+  .modal{max-height:92vh}
 }
-@media(max-width:600px){
-  .stats-grid{grid-template-columns:1fr 1fr}
+
+/* ═══ SMALL TABLET / LARGE PHONE: ≤768px ═════════════════ */
+@media(max-width:768px){
+  .main-content{padding:var(--sp-3)}
+
+  /* Stats cards smaller */
+  .stat-card{padding:var(--sp-4)}
+  .stat-card-num{font-size:1.5rem}
+  .stat-card-icon{font-size:1.2rem}
+
+  /* Quick actions: 2 columns */
   .quick-actions{grid-template-columns:1fr 1fr}
+  .action-card{padding:var(--sp-4) var(--sp-3)}
+
+  /* Category breakdown: 2 columns */
   .category-breakdown{grid-template-columns:1fr 1fr}
+
+  /* Review cards stack */
+  .review-admin-card{flex-direction:column}
+  .review-admin-actions{margin-left:0;margin-top:var(--sp-2);flex-wrap:wrap}
+
+  /* Form rows stack */
   .form-row{flex-direction:column}
   .form-row .form-group{min-width:0}
-  .review-admin-card{flex-direction:column}
-  .review-admin-actions{margin-left:0;margin-top:var(--sp-2)}
-  .modal{max-height:95vh}
-  .items-table th,.items-table td{padding:var(--sp-2) var(--sp-3);font-size:0.78rem}
-  .item-desc-cell{display:none}
+
+  /* Loc admin cards full width */
+  .locations-admin-grid{grid-template-columns:1fr}
+
+  /* Settings cards */
+  .settings-grid{grid-template-columns:1fr}
+}
+
+/* ═══ MOBILE: ≤600px ═══════════════════════════════════════ */
+@media(max-width:600px){
+  /* Sidebar takes more width on small phones */
+  .sidebar{width:280px}
+
+  /* Mobile header sticky & refined */
+  .mobile-header{
+    position:sticky;top:0;z-index:50;
+    padding:var(--sp-2) var(--sp-3);
+  }
+  .mobile-title{
+    font-size:0.92rem;
+    max-width:160px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .hamburger{padding:var(--sp-2);min-width:44px;min-height:44px;align-items:center;justify-content:center}
+
+  /* Main content even tighter */
+  .main-content{padding:var(--sp-3)}
+
+  /* View header */
+  .view-header h1{font-size:1.2rem}
+  .view-sub{font-size:0.82rem}
+
+  /* Stats grid: 2 columns */
+  .stats-grid{grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+  .stat-card{padding:var(--sp-3)}
+  .stat-card-num{font-size:1.3rem}
+  .stat-card-label{font-size:0.72rem}
+  .stat-card-icon{font-size:1.2rem}
+
+  /* Quick actions: 2x2 */
+  .quick-actions{grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+  .action-card{padding:var(--sp-3) var(--sp-2);font-size:0.8rem}
+  .action-icon{font-size:1.3rem}
+
+  /* Category breakdown: 2 cols */
+  .category-breakdown{grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+  .cat-chip{padding:var(--sp-2) var(--sp-3)}
+  .cat-chip-name{font-size:0.8rem}
+
+  /* ── TABLE → CARD LAYOUT ────────────────────────────── */
+  .items-table-wrap{
+    border:none;box-shadow:none;background:transparent;
+  }
+  .items-table thead{display:none}
+  .items-table tbody{
+    display:flex;flex-direction:column;gap:var(--sp-3);
+  }
+  .items-table tr{
+    display:flex;flex-wrap:wrap;
+    background:var(--clr-surface);
+    border:2px solid var(--clr-border);
+    border-radius:var(--r-md);
+    box-shadow:var(--shadow-xs);
+    padding:var(--sp-3);
+    gap:var(--sp-2) var(--sp-3);
+    align-items:center;
+  }
+  .items-table tr:hover td{background:transparent}
+  .items-table td{
+    display:flex;align-items:center;gap:var(--sp-2);
+    padding:0;
+    border-bottom:none;
+    font-size:0.85rem;
+  }
+
+  /* Hide # column */
+  .items-table td:nth-child(1){display:none}
+
+  /* Image: small fixed width */
+  .items-table td:nth-child(2){
+    flex:0 0 auto;
+    order:-3;
+  }
+
+  /* Name + desc: takes remaining space in first row */
+  .items-table td:nth-child(3){
+    flex:1 1 0;
+    min-width:0;
+    order:-2;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .item-name-cell{font-size:0.92rem}
+  .item-desc-cell{
+    display:block;
+    max-width:100%;
+    overflow:hidden;text-overflow:ellipsis;white-space:normal;
+    font-size:0.75rem;
+    margin-top:2px;
+  }
+
+  /* Price: right side of first row */
+  .items-table td:nth-child(4){
+    flex:0 0 auto;
+    order:-1;
+    margin-left:auto;
+  }
+
+  /* Badge: inline after price */
+  .items-table td:nth-child(5){
+    flex:0 0 auto;
+    order:0;
+  }
+
+  /* Actions: full width row below */
+  .items-table td:nth-child(6){
+    flex:0 0 100%;
+    order:1;
+  }
+  .item-actions{
+    flex-wrap:wrap;
+    gap:var(--sp-2);
+    padding-top:var(--sp-2);
+    border-top:1px solid rgba(30,18,8,0.08);
+    width:100%;
+  }
+
+  /* Touch-friendly buttons */
+  .btn-icon{
+    width:36px;height:36px;min-width:36px;min-height:36px;
+  }
+  .btn-sm{
+    padding:10px 16px;min-height:44px;
+  }
+  .btn-xs{
+    padding:8px 12px;min-height:36px;
+  }
+
+  /* Review cards */
+  .review-admin-card{padding:var(--sp-3)}
+  .review-admin-text{font-size:0.82rem}
+
+  /* ── MODALS: near-fullscreen ─────────────────────────── */
+  .modal-overlay{
+    padding:0;
+    align-items:flex-end;
+  }
+  .modal{
+    max-width:100%;
+    max-height:96vh;
+    border-radius:var(--r-card) var(--r-card) 0 0;
+  }
+  .modal-header{
+    position:sticky;top:0;
+    background:var(--clr-surface);
+    z-index:1;
+    padding:var(--sp-4) var(--sp-4) var(--sp-2);
+    border-bottom:1px solid rgba(30,18,8,0.06);
+  }
+  .modal-header h2{font-size:1.05rem}
+  .modal-body{padding:var(--sp-4)}
+  .modal-footer{
+    padding:var(--sp-3) var(--sp-4) var(--sp-4);
+    flex-wrap:wrap;
+  }
+  .modal-footer .btn{flex:1;min-width:0;min-height:44px}
+
+  /* Login screen */
+  .login-card{
+    padding:var(--sp-6) var(--sp-5);
+    margin:var(--sp-4);
+  }
+  .login-logo{font-size:1.5rem}
+  .login-title{font-size:1.2rem}
+
+  /* Form inputs */
+  input[type="text"],input[type="email"],input[type="password"],
+  input[type="number"],select,textarea{
+    font-size:16px; /* Prevents iOS zoom */
+    padding:12px var(--sp-3);
+    min-height:44px;
+  }
+  select{min-height:44px}
+
+  /* Size rows touch-friendly */
+  .size-row{flex-wrap:wrap}
+  .size-row input{min-height:44px}
+  .btn-remove-size{width:36px;height:36px}
+
+  /* ── TOAST: bottom center on mobile ─────────────────── */
+  .toast-container{
+    top:auto;bottom:var(--sp-5);
+    right:50%;
+    transform:translateX(50%);
+    left:auto;
+    width:calc(100% - var(--sp-8));
+    max-width:360px;
+    align-items:center;
+  }
+  .toast{
+    width:100%;
+    max-width:100%;
+    animation:slideUpToast .25s var(--ease-out);
+  }
+  @keyframes slideUpToast{
+    0%{transform:translateY(20px);opacity:0}
+    100%{transform:translateY(0);opacity:1}
+  }
+  .toast.removing{
+    animation:slideDownToast .2s ease forwards;
+  }
+  @keyframes slideDownToast{
+    0%{transform:translateY(0);opacity:1}
+    100%{transform:translateY(20px);opacity:0}
+  }
+}
+
+/* ═══ TINY PHONES: ≤400px ═══════════════════════════════════ */
+@media(max-width:400px){
+  .mobile-header{padding:var(--sp-2)}
+  .mobile-title{font-size:0.85rem;max-width:130px}
+
+  .main-content{padding:var(--sp-2)}
+
+  .stats-grid{gap:var(--sp-2)}
+  .stat-card{padding:var(--sp-2) var(--sp-3)}
+  .stat-card-num{font-size:1.15rem}
+
+  .quick-actions{gap:var(--sp-2)}
+  .action-card{padding:var(--sp-3) var(--sp-2);font-size:0.78rem}
+  .action-icon{font-size:1.1rem}
+
+  .category-breakdown{gap:var(--sp-2)}
+
+  /* Modal fills even more */
+  .modal{max-height:100vh;border-radius:0}
+
+  /* Login card smaller */
+  .login-card{
+    padding:var(--sp-5) var(--sp-4);
+    margin:var(--sp-2);
+  }
+  .login-hint{font-size:0.72rem}
+
+  /* Toast takes full width */
+  .toast-container{
+    width:calc(100% - var(--sp-4));
+    bottom:var(--sp-3);
+  }
+
+  /* Items card layout even tighter */
+  .items-table tr{padding:var(--sp-2)}
+}
+
+/* ── TOUCH TARGET ENHANCEMENTS (all mobile) ─────────────── */
+@media(max-width:900px){
+  /* Ensure nav items are tappable */
+  .nav-item{
+    min-height:44px;
+    padding:var(--sp-3) var(--sp-4);
+  }
+  /* Admin tabs touch-friendly */
+  .admin-tab{
+    min-height:40px;
+    padding:8px 14px;
+  }
+  /* Action cards touch-friendly */
+  .action-card{
+    min-height:80px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* Modal close button touch-friendly */
+  .modal-close{
+    width:40px;height:40px;min-width:40px;min-height:40px;
+  }
+  /* Confirm modal buttons */
+  .modal-footer .btn{
+    min-height:44px;
+  }
+}
+
+/* ── LANDSCAPE PHONE TWEAKS ─────────────────────────────── */
+@media(max-width:900px) and (orientation:landscape){
+  .modal-overlay{align-items:center}
+  .modal{max-height:95vh;border-radius:var(--r-card)}
+  .mobile-header{padding:var(--sp-1) var(--sp-3)}
+}
+
+/* ── REDUCED MOTION ─────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .sidebar,.sidebar-backdrop{transition:none}
+  .toast,.toast.removing{animation:none}
+  .modal-overlay{animation:none}
 }

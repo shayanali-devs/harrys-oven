@@ -230,6 +230,14 @@
     document.getElementById('user-email').textContent = user.email;
     const settingsEmail = document.getElementById('settings-user-email');
     if (settingsEmail) settingsEmail.textContent = user.email;
+    // Update mobile avatar too
+    const mobileAvatar = document.getElementById('mobile-avatar');
+    if (mobileAvatar) {
+      mobileAvatar.textContent = initial;
+      if (currentRole && ROLES[currentRole]) {
+        mobileAvatar.style.background = ROLES[currentRole].color;
+      }
+    }
   }
 
   // ── ROLE PERMISSIONS ─────────────────────────────────────
@@ -276,22 +284,46 @@
       });
     });
 
-    // Mobile sidebar toggle
+    // Mobile sidebar toggle + backdrop
     const hamburger = document.getElementById('hamburger');
     const sidebar = document.getElementById('sidebar');
     const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+      document.body.style.overflow = '';
+    }
 
     if (hamburger) {
-      hamburger.addEventListener('click', () => sidebar.classList.add('open'));
+      hamburger.addEventListener('click', openSidebar);
     }
     if (sidebarClose) {
-      sidebarClose.addEventListener('click', () => sidebar.classList.remove('open'));
+      sidebarClose.addEventListener('click', closeSidebar);
+    }
+    if (sidebarBackdrop) {
+      sidebarBackdrop.addEventListener('click', closeSidebar);
     }
 
     // Close sidebar on view switch (mobile)
     document.querySelectorAll('.nav-item').forEach(btn => {
-      btn.addEventListener('click', () => sidebar.classList.remove('open'));
+      btn.addEventListener('click', closeSidebar);
     });
+
+    // Mobile header logout button
+    const mobileLogout = document.getElementById('mobile-logout');
+    if (mobileLogout) {
+      mobileLogout.addEventListener('click', () => {
+        const logoutBtn = document.getElementById('btn-logout');
+        if (logoutBtn) logoutBtn.click();
+      });
+    }
   }
 
   function switchView(viewName) {
